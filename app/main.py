@@ -1,5 +1,12 @@
+import sys
+from pathlib import Path
+
 import uvicorn
 from fastapi import FastAPI
+
+# Allow this file to be launched directly as well as imported as ``app.main``.
+if __package__ in (None, ""):
+    sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from app.db import Base, engine
 from app.score_router import router as score_router
