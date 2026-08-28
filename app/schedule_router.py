@@ -2,6 +2,7 @@ from fastapi import APIRouter, Depends, Query, Response
 from sqlalchemy.orm import Session
 
 from app.db import get_db
+from app.models import Group
 from app.repository import get_schedule_for_day
 from app.schemas import LessonResponse
 from app.time_service import (
@@ -14,6 +15,12 @@ from app.time_service import (
 
 # Implementing router
 router = APIRouter()
+
+
+@router.get("/groups")
+async def get_groups_handler(db: Session = Depends(get_db)):
+    groups = db.query(Group).order_by(Group.name).all()
+    return [{"id": group.id, "name": group.name} for group in groups]
 
 
 @router.get("/{group_id}")
