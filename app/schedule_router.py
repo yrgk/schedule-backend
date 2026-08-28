@@ -25,7 +25,7 @@ async def get_groups_handler(db: Session = Depends(get_db)):
 
 @router.get("/{group_id}")
 async def get_schedule_handler(
-    group_id: str,
+    group_id: int,
     day: str | None = Query(default=None, examples=["25.08.2026"]),
     with_time: bool = False,
     db: Session = Depends(get_db),
@@ -50,13 +50,14 @@ async def get_schedule_handler(
     try:
         schedule_response = [
             LessonResponse(
-                **{
-                    **lesson[0].__dict__,
-                    "title": lesson[1],
-                    "teacher_name": lesson[2],
-                }
+                title=title,
+                start_time=lesson.start_time,
+                end_time=lesson.end_time,
+                teacher_name=lesson.teacher_name,
+                location_short=lesson.location_short,
+                location=lesson.location,
             )
-            for lesson in schedule
+            for lesson, title in schedule
         ]
         if with_time:
             return categorize_schedule(schedule_response, schedule_date)

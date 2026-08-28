@@ -8,8 +8,8 @@ from app.models import Lesson, Subject
 
 def get_schedule_for_day(
     db: Session,
-    group_id: str,
-    day: int = None,
+    group_id: int,
+    day: int | None = None,
     is_odd_week: bool | None = None,
     study_week: int | None = None,
 ):
@@ -20,11 +20,11 @@ def get_schedule_for_day(
         db.query(
             Lesson,
             Subject.title.label("title"),
-            Subject.teacher_name.label("teacher_name"),
         )
         .options(
             load_only(
                 Lesson.day_of_week,
+                Lesson.teacher_name,
                 Lesson.start_time,
                 Lesson.end_time,
                 Lesson.location_short,
@@ -48,8 +48,8 @@ def get_schedule_for_day(
 
     if study_week is not None:
         lessons = lessons.filter(
-            or_(Subject.start_week.is_(None), Subject.start_week <= study_week),
-            or_(Subject.end_week.is_(None), Subject.end_week >= study_week),
+            or_(Lesson.start_week.is_(None), Lesson.start_week <= study_week),
+            or_(Lesson.end_week.is_(None), Lesson.end_week >= study_week),
         )
 
     lessons = lessons.order_by(Lesson.start_time).all()

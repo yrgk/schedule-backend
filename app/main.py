@@ -9,7 +9,6 @@ if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from app.db import Base, engine
-from app.score_router import router as score_router
 from app.schedule_router import router as schedule_router
 
 
@@ -19,9 +18,8 @@ Base.metadata.create_all(bind=engine)
 # Implementing app
 app = FastAPI()
 
-# Including routers
+# Including router
 app.include_router(schedule_router, prefix="/schedule", tags=["Schedule"])
-app.include_router(score_router, prefix="/score", tags=["Score"])
 
 # Launching app
 if __name__ == '__main__':

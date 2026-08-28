@@ -16,11 +16,7 @@ class Subject(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     title = Column(Text, nullable=False)
-    teacher_name = Column(Text, nullable=True)
 
-    # Inclusive study-week range. None means that the boundary is not limited.
-    start_week = Column(Integer, nullable=True)
-    end_week = Column(Integer, nullable=True)
 
 
 class Lesson(Base):
@@ -28,8 +24,17 @@ class Lesson(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     day_of_week = Column(Integer, nullable=False)
+    teacher_name = Column(Text, nullable=True)
+
+    # Inclusive study-week range. None means that the boundary is not limited.
+    start_week = Column(Integer, nullable=True)
+    end_week = Column(Integer, nullable=True)
+
+    # Time data
     start_time = Column(Text, nullable=False)
     end_time = Column(Text, nullable=False)
+
+    # Location data
     location_short = Column(Text, nullable=True)
     location = Column(Text, nullable=False)
 
@@ -39,13 +44,3 @@ class Lesson(Base):
     # Relationships
     subject_id = Column(Integer, nullable=False)
     group_id = Column(Integer, nullable=False)
-
-
-# Score models
-class SubjectScore(Base):
-    __tablename__ = "subject_scores"
-
-    id = Column(Integer, primary_key=True, index=True)
-    score = Column(Integer, nullable=False)
-    subject_id = Column(Integer, nullable=False)
-    telegram_user_id = Column(Integer, nullable=False, unique=True)
