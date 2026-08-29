@@ -2,7 +2,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 
-from config import Settings
+from app.config import Settings
 
 engine = create_engine(Settings.DSN)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
