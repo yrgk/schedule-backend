@@ -23,20 +23,34 @@ def parse_schedule_date(day: str | None) -> date:
         ) from error
 
 
-def get_study_week(schedule_date: date) -> int:
-    """Return the academic week number for a date relative to the semester start.
-
-    The Monday-Sunday week containing ``Settings.START_DAY`` is week 1. Dates in
-    earlier weeks produce zero or negative week numbers.
-    """
+def get_semester_start_day() -> date:
+    """Return the configured first study day."""
     try:
-        semester_start_day = datetime.strptime(Settings.START_DAY, Settings.DATE_FORMAT).date()
+        return datetime.strptime(
+            Settings.START_DAY,
+            Settings.DATE_FORMAT,
+        ).date()
     except ValueError as error:
         raise RuntimeError(
             "Settings.START_DAY must be a valid date in DD.MM.YYYY format"
         ) from error
 
-    semester_week_start = semester_start_day - timedelta(days=semester_start_day.weekday())
+
+def is_before_semester_start(schedule_date: date) -> bool:
+    """Return whether a date is earlier than the first configured study day."""
+    return schedule_date < get_semester_start_day()
+
+
+def get_study_week(schedule_date: date) -> int:
+    """Return the academic week number for a date relative to the semester start.
+
+    The Monday-Sunday week containing ``Settings.START_DAY`` is week 1.
+    """
+    semester_start_day = get_semester_start_day()
+
+    semester_week_start = semester_start_day - timedelta(
+        days=semester_start_day.weekday(),
+    )
     schedule_week_start = schedule_date - timedelta(days=schedule_date.weekday())
     weeks_from_start = (schedule_week_start - semester_week_start).days // 7
     return weeks_from_start + 1
