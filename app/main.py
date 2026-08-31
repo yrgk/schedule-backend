@@ -19,7 +19,7 @@ Base.metadata.create_all(bind=engine)
 app = FastAPI()
 
 # Including router
-app.include_router(schedule_router, prefix="/schedule", tags=["Schedule"])
+app.include_router(schedule_router, prefix="/api/schedule", tags=["Schedule"])
 
 # Launching app
 if __name__ == '__main__':
